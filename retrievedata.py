@@ -1,26 +1,25 @@
 import psycopg2
 
-def get_Data():
+def retrieve_data():
     try:
         connection = psycopg2.connect(user = "postgres",
                                       password = "password",
                                       host = "127.0.0.1",
                                       port = "5432",
-                                      database = "events")
+                                      database = "data")
 
         cursor = connection.cursor()
 
-        read_data = "SELECT password,priority FROM login_credentials WHERE username = %s AND club =%c;"
-        pwd = cursor.execute(read_data,(username,))
-        for row in pwd:
-            log_pwd = row.password
-            if log_pwd == password:
-                return True,row.priority
+        empty=[]
 
-        return False,-1
+        read_data = "SELECT * FROM data;"
+        data = cursor.execute(read_data,(club,))
+        for row in data:
+            return row
+        return empty
 
     except (Exception, psycopg2.Error) as error :
-        print ("Error while connecting to PostgreSQL", error)
+        print ("Error while retrieving data", error)
     finally:
         #closing database connection.
             if(connection):
